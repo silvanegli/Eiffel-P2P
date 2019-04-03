@@ -6,7 +6,7 @@ Readme file for p2p-client
 - supervisor: "Jocelyn Fiat"
 - date: "2015-jan-14"
 
-1. Introduction
+### 1. Introduction
 ---------------
 NAT stands for Network Address Translation was introduced to solve the problem of the
 internet running out of addresses. It can for example be implemented on a router in
@@ -31,7 +31,7 @@ With this tool it is possible to establish a UDP connection between two clients.
 As a result the clients are able to send strings to each other.
 
 
-2. Idea
+### 2. Idea
 ----------------
 
 We are providing two tools:
@@ -229,7 +229,7 @@ Classes of Client_Interface:
 						changed according to the given network architecture. When setting debugging to true, the outputs from UDP_SEND_THREAD and 
 						UDP_RECEIVE_THREAD are displayed
 
-5. Step-by-Step Guide
+### 5. Step-by-Step Guide
 ---------------------
 1) As a first step you need to download the resources from our bitbucket side:
 
@@ -319,13 +319,13 @@ You may call the Receive function in a separate Thread. For Receive:
 
 4) Now you may run the project system.
 
-6. Example
+### 6. Example
 ----------
 
 For better understanding there is an implementation of a peer-to-peer chat which can be
 found in eiffel-p2p/Client_Interface/examples
 
-7. Future trends /issues 
+### 7. Future trends /issues 
 ------------------------
 
 security:	Currently there is no authentication integrated an implementation with a user requiring a password to register or unregister 
@@ -344,7 +344,7 @@ NAT:		There are many different kinds of NAT and especially for Symetric NAT UDP 
 Platform: 	The system was tested for Linux and Windows Microsoft but not for Mac OS
 
 
-8. Sources
+### 8. Sources
 ----------
 
 http://www.bford.info/pub/net/p2pnat/index.html
