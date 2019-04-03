@@ -51,13 +51,11 @@ In this example Client_1 tries to connect to Client_2.
 We assume such a connection:
 
 (private: 193.0.0.2/40001) 		(public: 188.4.51.191)		(public	201.2.68.74/8888)		(public: 194.18.15.51)		(private: 10.0.0.1/40001)
-	   Client_1	 --------------------	NAT_1  -------------------	Rendezvous	------------------	NAT_2  --------------------- Client_2
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Client_1 --------------------	NAT_1  -------------------	Rendezvous	------------------	NAT_2  --------------------- Client_2
 															          Server
-								
-								NAT_1 Translation Table				 Database				NAT_2 Translation Table
 
 In a first stage, the Client_1 and Client_2 will register themselves to the Rendezvous server.
-After registering the entries of the tables and the database looks as following
+After registering the entries of the NAT-tables and the database of the server look as following
 
 	NAT_1 Translation Table:						
 	193.0.0.2/40001	<-> 188.4.51.191/ 50057	
