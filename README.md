@@ -87,11 +87,7 @@ a UDP packet we "punch a hole" in the NAT device such that packets from the othe
 peer can come in. Therefore the name UDP Hole Punch
 
 Finally if both peers have received a UDP packet from the other one they are connected.
-		   ___________
-		  |Rendezvous |
-		  |  Server   |
-		  |___________|
-	   
+   
 	Client_1 <--------> Client_2
 
 In UDP there is no explicit connection teardown like in TCP. So the NAT's generally
@@ -99,7 +95,8 @@ don't know when a rule won't be used anymore. Therefore they have Idle Time-outs
 which the rule is deleted. To avoid this both endpoints have to send so called keep-alive
 packets to each other periodically.
 
-3. Requirements
+
+### 3. Requirements
 ---------------
 First there are needed two clients and one server which is running on public IP/port.
 Both the Rendezvous_Server and the Client_Interface make use of the Eiffel net library.
@@ -124,108 +121,108 @@ given connecting_timeout.
 Classes of Rendezvous_Server:
 
 	APPLICATION:		This is the root class. The server listens in an endless loop for incoming packets. When a packet
-						arrives it parses it to a JSON_OBJECT, detects the message type and passes the JSON_OBJECT to 
-						the corresponding handler.
+				arrives it parses it to a JSON_OBJECT, detects the message type and passes the JSON_OBJECT to 
+				the corresponding handler.
 	
 	CLIENT_DATABASE:	This class provides an interface for the APPLICATION class. It is client of HASH_TABLE[NETWORK_SOCKET_ADDRESS, STRING]
-						which is the implementation of the database. The different features are the interface to this
-						HASH_TABLE where the public IP/Port for each user are stored.
+				which is the implementation of the database. The different features are the interface to this
+				HASH_TABLE where the public IP/Port for each user are stored.
 	
-	UTILS:				This static class provides the constant that are necessary for the p2p protocol to run. Therefore a lot must be 
-						equal to the UTILS class of the Client_Interface. For example the error_type constants.
+	UTILS:			This static class provides the constant that are necessary for the p2p protocol to run. Therefore a lot must be 
+				equal to the UTILS class of the Client_Interface. For example the error_type constants.
 						
 Classes of Client_Interface:
 
-	TEST:				When set as root class TEST was and can be used to test the Client_Interface. It is not necessary for
-						the Client_Interface to run.
+	TEST:			When set as root class TEST was and can be used to test the Client_Interface. It is not necessary for
+				the Client_Interface to run.
 	
 	CONNECTION_MANAGER:	This class is the interface for a project using Client_Interface. The following features can be used:
 	
-						register(a_name: STRING): BOOLEAN		
-								Sends a packet to the server indicating to register a user with username a_name.
-								It returns whether the registering succeeded or not. What can go wrong:
-								server_down : the server did not respond within the timeout
-								client_already_registered: there exists already an identical entry in the server database
-								client_name_already_used: there exists an entry with the same name but other public IP in the server database
-								unknown_error: an error that could not be handled occurred
-						unregister(a_name: STRING): BOOLEAN
-								Like register. What can go wrong:
-								server_down : the server did not respond within the timeout
-								client_not_registered: there is no user with a_name in the database
-								invalid_unregister_attempt: the IP for a_name in the database did not match with the IP that tried to unregister a_name
-								unknown_error: an error that could not be handled occurred	
-						get_registered_users: BOOLEAN
-								Asks the server to hand out the currently registered users. Returns whether it succeeded.
-								If succeeded then the currently registered users can be found in registered_users as ARRAY of STRING. What can go wrong:
-								server_down : the server did not respond within the timeout
-								unknown_error: an error that could not be handled occurred	
-						connect(a_peer_name: STRING): BOOLEAN
-								Tries to connect to a_peer_name and returns whether the connection was established or not.
-								First it queries the server for the public IP/Port of a_peer_name and if that succeeded it goes on with the 
-								hole punching. What can go wrong:
-								server_down : the server did not respond the IP/Port query within the timeout
-								client_not_registered: there is no user with a_peer_name in the database
-								client_not_responding: no udp_hole_punch message of the other peer was received
-								unknown_error: an error that could not be handled occurred	
-						start
-								This feature launches the UDP_RECEIVE_THREAD and UDP_SEND_THREAD and should therefore be called before any other feature.
-						stop
-								Forces UDP_RECEIVE_THREAD, UDP_SEND_THREAD and KEEP_ALIVE_THREAD to finish by setting a finish flag. To ensure the 
-								application does not freeze a timeout is used.
-						send(a_string: STRING)
-								After connect succeeded this feature can be used to send a string to the other peer. This is done by putting
-								the packet to send into a send_queue from where the UDP_SEND_THREAD takes it out and sends it to the other peer.
-						receive_blocking:STRING
-								Waits until there is a string put into the receive_queue by the UDP_RECEIVE_THREAD and then returns the string
-						receive:STRING
-								Like receive_blocking:STRING
-						receive_non_blocking:STRING
-								Returns the top of the receive_queue if there is something otherwise returns Void. But never waits (non_blocking)
-						manager_terminated: BOOLEAN
-								Returns whether stop was called.
-								
-						The following fields tell the type of error that occurred after having called the corresponding feature from above
-						
-						register_error_type: INTEGER_64
-						unregister_error_type: INTEGER_64
-						connect_error_type: INTEGER_64
-						registered_users_error_type: INTEGER_64	
-						
-						The following features are not public and should not be accessed
-						
-						parse_packet(packet: PACKET): detachable JSON_OBJECT
-								PACKET only provides access character by character. Therefore we loop over the packet and build the 
-								string that represents the JSON_OBJECT. After that we parse the string to an object.
-								This method is exclusively used in UDP_RECEIVE_THREAD after having received a packet.
-						process(json_object: JSON_OBJECT)	
-								This method is also used exclusively in UDP_RECEIVE_THREAD after having successfully called parse_packet.
-								Likewise on the server side we first look at the type of the packet. According to the type a corresponding
-								handler is called.
+					register(a_name: STRING): BOOLEAN		
+							Sends a packet to the server indicating to register a user with username a_name.
+							It returns whether the registering succeeded or not. What can go wrong:
+							server_down : the server did not respond within the timeout
+							client_already_registered: there exists already an identical entry in the server database
+							client_name_already_used: there exists an entry with the same name but other public IP in the server database
+							unknown_error: an error that could not be handled occurred
+					unregister(a_name: STRING): BOOLEAN
+							Like register. What can go wrong:
+							server_down : the server did not respond within the timeout
+							client_not_registered: there is no user with a_name in the database
+							invalid_unregister_attempt: the IP for a_name in the database did not match with the IP that tried to unregister a_name
+							unknown_error: an error that could not be handled occurred	
+					get_registered_users: BOOLEAN
+							Asks the server to hand out the currently registered users. Returns whether it succeeded.
+							If succeeded then the currently registered users can be found in registered_users as ARRAY of STRING. What can go wrong:
+							server_down : the server did not respond within the timeout
+							unknown_error: an error that could not be handled occurred	
+					connect(a_peer_name: STRING): BOOLEAN
+							Tries to connect to a_peer_name and returns whether the connection was established or not.
+							First it queries the server for the public IP/Port of a_peer_name and if that succeeded it goes on with the 
+							hole punching. What can go wrong:
+							server_down : the server did not respond the IP/Port query within the timeout
+							client_not_registered: there is no user with a_peer_name in the database
+							client_not_responding: no udp_hole_punch message of the other peer was received
+							unknown_error: an error that could not be handled occurred	
+					start
+							This feature launches the UDP_RECEIVE_THREAD and UDP_SEND_THREAD and should therefore be called before any other feature.
+					stop
+							Forces UDP_RECEIVE_THREAD, UDP_SEND_THREAD and KEEP_ALIVE_THREAD to finish by setting a finish flag. To ensure the 
+							application does not freeze a timeout is used.
+					send(a_string: STRING)
+							After connect succeeded this feature can be used to send a string to the other peer. This is done by putting
+							the packet to send into a send_queue from where the UDP_SEND_THREAD takes it out and sends it to the other peer.
+					receive_blocking:STRING
+							Waits until there is a string put into the receive_queue by the UDP_RECEIVE_THREAD and then returns the string
+					receive:STRING
+							Like receive_blocking:STRING
+					receive_non_blocking:STRING
+							Returns the top of the receive_queue if there is something otherwise returns Void. But never waits (non_blocking)
+					manager_terminated: BOOLEAN
+							Returns whether stop was called.
+
+				The following fields tell the type of error that occurred after having called the corresponding feature from above
+
+					register_error_type: INTEGER_64
+					unregister_error_type: INTEGER_64
+					connect_error_type: INTEGER_64
+					registered_users_error_type: INTEGER_64	
+
+				The following features are not public and should not be accessed
+
+					parse_packet(packet: PACKET): detachable JSON_OBJECT
+							PACKET only provides access character by character. Therefore we loop over the packet and build the 
+							string that represents the JSON_OBJECT. After that we parse the string to an object.
+							This method is exclusively used in UDP_RECEIVE_THREAD after having received a packet.
+					process(json_object: JSON_OBJECT)	
+							This method is also used exclusively in UDP_RECEIVE_THREAD after having successfully called parse_packet.
+							Likewise on the server side we first look at the type of the packet. According to the type a corresponding
+							handler is called.
 
 	TARGET_PACKET:		This class is basically a PACKET with an additional field peer_address which is used by the UDP_SENDER_THREAD
-						so that it knows who to send the message to. Furthermore it has some helper features that ease the creation of a packet
-						such as fill. For every message_type there exists an appropriate creation feature so that in the CONNECTION_MANAGER
-						only create packet.make_register_packet("Anna"); send_queue.extend(packet) has to be called.
-	
+				so that it knows who to send the message to. Furthermore it has some helper features that ease the creation of a packet
+				such as fill. For every message_type there exists an appropriate creation feature so that in the CONNECTION_MANAGER
+				only create packet.make_register_packet("Anna"); send_queue.extend(packet) has to be called.
+
 	MUTEX_LINKED_QUEUE:	When sending a packet CONNECTION_MANAGER puts it in a MUTEX_LINKED_QUEUE called send_queue. On the other side UDP_RECEIVE_THREAD
-						periodically checks whether there is something in the queue and if so sends the packet. 
-						When receiving a packet in UDP_RECEIVE_THREAD and if the packet is for the user it is pushed into a MUTEX_LINKED_QUEUE 
-						from where a client can read it in CONNECTION_MANAGER receive. 
-						This architecture allows to separate the client application (main thread) from receiving and sending. As multiple Threads
-						access the queues the access is only given while holding a lock on a MUTEX.
+				periodically checks whether there is something in the queue and if so sends the packet. 
+				When receiving a packet in UDP_RECEIVE_THREAD and if the packet is for the user it is pushed into a MUTEX_LINKED_QUEUE 
+				from where a client can read it in CONNECTION_MANAGER receive. 
+				This architecture allows to separate the client application (main thread) from receiving and sending. As multiple Threads
+				access the queues the access is only given while holding a lock on a MUTEX.
 	
 	UDP_SEND_THREAD:	A Thread that periodically checks whether there is a TARGE_PACKET in the send_queue and if so sends it to the address given in the packet.
 	
 	UDP_RECEIVE_THREAD:	A Thread that listens on the socket for incoming packets. After having received a packet it uses the CONNECTION_MANAGER's parse_packet and
-						process. Therefore it is client of CONNECTION_MANAGER.
+				process. Therefore it is client of CONNECTION_MANAGER.
 	
 	KEEP_ALIVE_THREAD:	This Thread is launched when a connect in CONNECTION_MANAGER succeeded. It periodically sends keep-alive packets to the other peer.
 
-	UTILS:				This static class provides the constant that are necessary for the p2p protocol to run. Therefore a lot must be 
-						equal to the UTILS class of the Rendezvous_Server. For example the error_type constants. Additionally there are constants
-						like server_ip or server_port that must be adjusted according to the server. Also the different timeouts and intervals might be 
-						changed according to the given network architecture. When setting debugging to true, the outputs from UDP_SEND_THREAD and 
-						UDP_RECEIVE_THREAD are displayed
+	UTILS:			This static class provides the constant that are necessary for the p2p protocol to run. Therefore a lot must be 
+				equal to the UTILS class of the Rendezvous_Server. For example the error_type constants. Additionally there are constants
+				like server_ip or server_port that must be adjusted according to the server. Also the different timeouts and intervals might be 
+				changed according to the given network architecture. When setting debugging to true, the outputs from UDP_SEND_THREAD and 
+				UDP_RECEIVE_THREAD are displayed
 
 ### 5. Step-by-Step Guide
 ---------------------
