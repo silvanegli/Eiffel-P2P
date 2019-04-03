@@ -228,7 +228,7 @@ Classes of Client_Interface:
 ---------------------
 1) As a first step you need to download the resources from our bitbucket side:
 
-Using git: git clone git@bitbucket.org:peyers/eiffel-p2p.git
+Using git: `git clone git@github.com:silvanegli/Eiffel-P2P.git`
 There are two folders: "Client_Interface" and "Rendezvous_Server"
 
 2) Setting up the Server:
@@ -318,25 +318,23 @@ You may call the Receive function in a separate Thread. For Receive:
 ----------
 
 For better understanding there is an implementation of a peer-to-peer chat which can be
-found in eiffel-p2p/Client_Interface/examples
+found in [Client_Interface/examples](https://github.com/silvanegli/Eiffel-P2P/tree/master/Client_Interface/examples/Chat)
 
 ### 7. Future trends /issues 
 ------------------------
 
-security:	Currently there is no authentication integrated an implementation with a user requiring a password to register or unregister 
-			would be nice
-TCP:		This implementation is fully based on UDP. We tried to use TCP (and TCP Hole Punch) but had a lot of problems.
-			A solution also supporting TCP would be nice regarding reliability, keep-alive overhead
-connect:	So far The CONNECTION_MANAGER.connect feature must be called on both sides within the
-			given connecting_timeout. A solution where one side waits for the other side to connect, likewise TCP listen/connect
-			would also be possible.
-Network Architecture:
-			For two devices sitting behind the same NAT device (being in the same network) a nice extension would be to also
-			check whether a connection with private IP/Port succeeds and if not going on with this code. Therefore also the private IP/Port 
-			would have to be stored on the server.
-NAT:		There are many different kinds of NAT and especially for Symetric NAT UDP Hole Punching can have problems.
-
-Platform: 	The system was tested for Linux and Windows Microsoft but not for Mac OS
+	Security:		Currently there is no authentication integrated an implementation with a user requiring a password to register or unregister 
+				would be nice
+	TCP:			This implementation is fully based on UDP. We tried to use TCP (and TCP Hole Punch) but had a lot of problems.
+				A solution also supporting TCP would be nice regarding reliability, keep-alive overhead
+	connect:		So far The CONNECTION_MANAGER.connect feature must be called on both sides within the
+				given connecting_timeout. A solution where one side waits for the other side to connect, likewise TCP listen/connect
+				would also be possible.
+	Network Architecture:	For two devices sitting behind the same NAT device (being in the same network) a nice extension would be to also
+				check whether a connection with private IP/Port succeeds and if not going on with this code. Therefore also the private IP/Port 
+				would have to be stored on the server.
+	NAT:			There are many different kinds of NAT and especially for Symetric NAT UDP Hole Punching can have problems.
+	Platform: 		The system was tested for Linux and Windows Microsoft but not for Mac OS
 
 
 ### 8. Sources
